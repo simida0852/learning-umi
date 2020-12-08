@@ -49,12 +49,27 @@ const errorHandler = (error: { response: Response }): Response => {
 /**
  * 配置request请求时的默认参数
  */
+
 const request = extend({
   prefix: 'http://127.0.0.1:7001',
   errorHandler, // 默认错误处理,
-  headers: {
-    Authorization: `Bearer ${getAuthority()}`,
-  },
+});
+
+request.interceptors.request.use((url: any, options: any) => {
+  const token = getAuthority();
+  if (token) {
+    const headers = {
+      Authorization: `Bearer ${token}`,
+    };
+    return {
+      url,
+      options: { ...options, headers },
+    };
+  }
+  return {
+    url,
+    options,
+  };
 });
 
 export default request;
