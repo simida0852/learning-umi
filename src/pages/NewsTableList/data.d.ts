@@ -1,16 +1,6 @@
-export interface TableListItem {
-  key: number;
-  disabled?: boolean;
-  href: string;
-  avatar: string;
-  name: string;
-  owner: string;
-  desc: string;
-  callNo: number;
-  status: number;
-  updatedAt: Date;
-  createdAt: Date;
-  progress: number;
+export interface NewsItem {
+  id?: string;
+  title: string;
 }
 
 export interface TableListPagination {
@@ -20,17 +10,12 @@ export interface TableListPagination {
 }
 
 export interface TableListData {
-  list: TableListItem[];
+  list: NewsItem[];
   pagination: Partial<TableListPagination>;
 }
 
-export interface TableListParams {
-  status?: string;
-  name?: string;
-  desc?: string;
-  key?: number;
+export interface NewsParams {
+  id?: string;
   pageSize?: number;
   currentPage?: number;
-  filter?: { [key: string]: any[] };
-  sorter?: { [key: string]: any };
 }

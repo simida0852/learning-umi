@@ -64,7 +64,7 @@ export default defineConfig({
             },
             {
               name: '新闻列表',
-              icon: 'file',
+              icon: 'profile',
               path: '/newsList',
               component: './NewsTableList',
             },

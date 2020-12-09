@@ -1,43 +1,67 @@
-import React, { useEffect, useRef, useState } from 'react';
+/* eslint-disable no-underscore-dangle */
+import React, { useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import ProTable, { ActionType } from '@ant-design/pro-table';
+import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
+import { Drawer, Typography } from 'antd';
+import { NewsItem } from './data.d';
+import { queryNew, queryNews } from './service';
 
-import { queryNews } from './service';
+const { Title, Paragraph } = Typography;
 
 const TableList: React.FC<{}> = () => {
   const actionRef = useRef<ActionType>();
+  const [row, setRow] = useState<NewsItem>();
 
-  const [data, setData] = useState([]);
-
-  const columns: any = [
+  const columns: ProColumns<NewsItem>[] = [
     {
       title: '标题',
       dataIndex: 'title',
-      copyable: true,
       ellipsis: true,
       width: 200,
       hideInSearch: true,
+      render: (dom, entity: any) => {
+        return (
+          <a
+            onClick={() => {
+              queryNew(entity?._id);
+              setRow(entity);
+            }}
+          >
+            {dom}
+          </a>
+        );
+      },
     },
   ];
 
-  useEffect(() => {
-    queryNews().then((res) => {
-      setData(res?.data);
-    });
-  }, []);
-
   return (
     <PageContainer title={false}>
-      <ProTable<any>
+      <ProTable<NewsItem>
         headerTitle="新闻列表"
         actionRef={actionRef}
         rowKey="key"
         search={{
           labelWidth: 120,
         }}
-        dataSource={data}
         columns={columns}
+        request={(params) => queryNews({ ...params })}
       />
+
+      <Drawer
+        width={1000}
+        visible={!!row}
+        onClose={() => {
+          setRow(undefined);
+        }}
+        closable={false}
+      >
+        {row?.title && (
+          <Typography>
+            <Title level={4}>{row.title}</Title>
+            <Paragraph>{row.title}</Paragraph>
+          </Typography>
+        )}
+      </Drawer>
     </PageContainer>
   );
 };
