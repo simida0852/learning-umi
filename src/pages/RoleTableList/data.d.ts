@@ -1,7 +1,8 @@
-export interface NewsItem {
-  id?: string;
-  title: string;
-  content: string;
+export interface RoleItem {
+  name: string;
+  access: string;
+  extra: string;
+  createdAt: Date;
 }
 
 export interface TableListPagination {
@@ -11,11 +12,11 @@ export interface TableListPagination {
 }
 
 export interface TableListData {
-  list: NewsItem[];
+  list: RoleItem[];
   pagination: Partial<TableListPagination>;
 }
 
-export interface NewsParams {
+export interface RoleParams {
   id?: string;
   pageSize?: number;
   currentPage?: number;

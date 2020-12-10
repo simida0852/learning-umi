@@ -58,7 +58,7 @@ const TableList: React.FC<{}> = () => {
         {row?.title && (
           <Typography>
             <Title level={4}>{row.title}</Title>
-            <Paragraph>{row.title}</Paragraph>
+            <Paragraph>{row.content}</Paragraph>
           </Typography>
         )}
       </Drawer>
