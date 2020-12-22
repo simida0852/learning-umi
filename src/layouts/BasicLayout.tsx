@@ -1,3 +1,4 @@
+/* eslint-disable no-empty-pattern */
 /**
  * Ant Design Pro v4 use `@ant-design/pro-layout` to handle Layout.
  * You can view component api by:
@@ -94,9 +95,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
       pathname: '/',
     },
   } = props;
-
   const menuDataRef = useRef<MenuDataItem[]>([]);
-
   useEffect(() => {
     if (dispatch) {
       dispatch({
@@ -107,7 +106,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
   /**
    * init variables
    */
-
   const handleMenuCollapse = (payload: boolean): void => {
     if (dispatch) {
       dispatch({
@@ -115,8 +113,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
         payload,
       });
     }
-  };
-  // get children authority
+  }; // get children authority
   const authorized = useMemo(
     () =>
       getMatchMenu(location.pathname || '/', menuDataRef.current).pop() || {
@@ -124,25 +121,23 @@ const BasicLayout: React.FC<BasicLayoutProps> = (props) => {
       },
     [location.pathname],
   );
-
-  const { formatMessage } = useIntl();
-
+  const {} = useIntl();
   return (
     <ProLayout
       logo={logo}
-      formatMessage={formatMessage}
       onCollapse={handleMenuCollapse}
       onMenuHeaderClick={() => history.push('/')}
       menuItemRender={(menuItemProps, defaultDom) => {
         if (menuItemProps.isUrl || !menuItemProps.path) {
           return defaultDom;
         }
+
         return <Link to={menuItemProps.path}>{defaultDom}</Link>;
       }}
       breadcrumbRender={(routers = []) => [
         {
           path: '/',
-          breadcrumbName: formatMessage({ id: 'menu.home' }),
+          breadcrumbName: '首页',
         },
         ...routers,
       ]}

@@ -4,6 +4,7 @@ import ProTable, { ActionType } from '@ant-design/pro-table';
 import { Button } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import DrawerCom from '@/components/Drawer';
+import Upload from '@/components/Upload/Upload';
 import { addUser, queryUsers, removeUser, UpdateUser } from './service';
 import { UpdateUserForm } from './components/UpdateUserForm';
 
@@ -33,7 +34,7 @@ const TableList: React.FC<{}> = () => {
 
   const columns: any = [
     {
-      title: '用户名称',
+      title: '账号',
       dataIndex: 'account',
       copyable: true,
       ellipsis: true,
@@ -44,6 +45,52 @@ const TableList: React.FC<{}> = () => {
     {
       title: '密码',
       dataIndex: 'password',
+      copyable: true,
+      ellipsis: true,
+      width: 200,
+      hideInSearch: true,
+      hideInTable: true,
+    },
+    {
+      title: '手机号码',
+      dataIndex: 'mobile',
+      copyable: true,
+      ellipsis: true,
+      width: 200,
+      hideInSearch: true,
+      hideInTable: true,
+    },
+    {
+      title: '姓名',
+      dataIndex: 'realName',
+      copyable: true,
+      ellipsis: true,
+      width: 200,
+      hideInSearch: true,
+      hideInTable: true,
+    },
+    {
+      title: '角色',
+      dataIndex: 'role',
+      copyable: true,
+      ellipsis: true,
+      width: 200,
+      hideInSearch: true,
+      hideInTable: true,
+    },
+    {
+      title: '头像',
+      dataIndex: 'avatar',
+      ellipsis: true,
+      width: 200,
+      hideInSearch: true,
+      hideInTable: true,
+      valueType: 'avatar',
+      renderFormItem: () => <Upload />,
+    },
+    {
+      title: '用户描述',
+      dataIndex: 'extra',
       copyable: true,
       ellipsis: true,
       width: 200,
@@ -104,7 +151,7 @@ const TableList: React.FC<{}> = () => {
         dataSource={data}
         columns={columns}
         toolBarRender={() => [
-          <Button key="3" type="primary" onClick={handleClick}>
+          <Button key="1" type="primary" onClick={handleClick}>
             <PlusOutlined />
             新建
           </Button>,

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Button, Form, Input } from 'antd';
 import { EyeInvisibleOutlined, EyeTwoTone } from '@ant-design/icons';
+import Upload from '@/components/Upload/Upload';
 import { queryUser } from '../service';
 
 export const UpdateUserForm = (props: any) => {
@@ -13,7 +14,7 @@ export const UpdateUserForm = (props: any) => {
   useEffect(() => {
     queryUser(id).then((res) => {
       if (res.code === 200) {
-        form.setFieldsValue(res.data);
+        form.setFieldsValue({ ...res.data, roleName: res.data.role.name });
       }
     });
   }, []);
@@ -45,6 +46,41 @@ export const UpdateUserForm = (props: any) => {
           placeholder="请输入您的密码"
           iconRender={(visible) => (visible ? <EyeTwoTone /> : <EyeInvisibleOutlined />)}
         />
+      </Form.Item>
+      <Form.Item
+        label="手机号码"
+        name="mobile"
+        rules={[{ required: true, message: '请输入您的手机号码!' }]}
+      >
+        <Input placeholder="请输入您的手机号码" />
+      </Form.Item>
+      <Form.Item
+        label="姓名"
+        name="realName"
+        rules={[{ required: true, message: '请输入您的姓名!' }]}
+      >
+        <Input placeholder="请输入您的姓名" />
+      </Form.Item>
+      <Form.Item
+        label="角色"
+        name="roleName"
+        rules={[{ required: true, message: '请输入您的角色!' }]}
+      >
+        <Input placeholder="请输入您的角色" />
+      </Form.Item>
+      <Form.Item
+        label="用户描述"
+        name="extra"
+        rules={[{ required: true, message: '请输入用户描述!' }]}
+      >
+        <Input placeholder="请输入用户描述" />
+      </Form.Item>
+      <Form.Item
+        label="头像"
+        name="avatar"
+        rules={[{ required: true, message: '请输入您的头像!' }]}
+      >
+        <Upload />
       </Form.Item>
       <Form.Item>
         <Button type="primary" htmlType="submit">
