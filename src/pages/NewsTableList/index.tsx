@@ -1,67 +1,171 @@
-/* eslint-disable no-underscore-dangle */
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-import { Drawer, Typography } from 'antd';
-import { NewsItem } from './data.d';
-import { queryNew, queryNews } from './service';
+import { Button, Divider, message, Typography } from 'antd';
+import { News } from '@/models/news';
+import { PlusOutlined } from '@ant-design/icons';
+import * as service from './service';
+import Details from './components/DetailsComp';
+import ModalForm from './components/ModalForm';
+import CreateForm from './components/CreateForm';
+import ModifyForm from './components/ModifyForm';
 
-const { Title, Paragraph } = Typography;
+const entityTypeName = '新闻列表';
+
+type Entity = News;
+
+const entityApiService = {
+  deleteEntity: service.deletedNews,
+  deleteEntities: service.deletedNewss,
+  queryEntities: service.queryNewss,
+  queryEntitie: service.queryNews,
+};
 
 const TableList: React.FC<{}> = () => {
   const actionRef = useRef<ActionType>();
-  const [row, setRow] = useState<NewsItem>();
+  const [dataSource, setDataSource] = useState<Entity[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
 
-  const columns: ProColumns<NewsItem>[] = [
+  const [creactModalVisible, setCreactModalVisible] = useState<boolean>(false);
+  const [detailEntity, setDetailEntity] = useState<Entity | null>();
+  const [detailModalVisible, setDetailModalVisible] = useState<boolean>(false);
+  const [modifyEntity, setModifyEntity] = useState<Entity | null>();
+  const [modifyModalVisible, setModifyModalVisible] = useState<boolean>(false);
+
+  const loadData = () => {
+    setLoading(true);
+    entityApiService.queryEntities().then((res: any) => {
+      if (res.code === 200) {
+        setDataSource(res.data.list);
+        setLoading(false);
+      }
+    });
+  };
+
+  const columns: ProColumns<Entity>[] = [
     {
       title: '标题',
       dataIndex: 'title',
       ellipsis: true,
-      width: 200,
       hideInSearch: true,
-      render: (dom, entity: any) => {
-        return (
+    },
+    {
+      title: '操作',
+      fixed: 'right',
+      dataIndex: 'option',
+      valueType: 'option',
+      render: (_, record: Entity) => (
+        <>
           <a
             onClick={() => {
-              queryNew(entity?._id);
-              setRow(entity);
+              entityApiService.queryEntitie(record._id).then((res) => {
+                if (res.code === 200) {
+                  setDetailModalVisible(true);
+                  setDetailEntity(res.data);
+                }
+              });
             }}
           >
-            {dom}
+            详情
           </a>
-        );
-      },
+
+          <>
+            <Divider type="vertical" />
+            <a
+              onClick={() => {
+                setModifyModalVisible(true);
+                setModifyEntity(record);
+              }}
+            >
+              编辑
+            </a>
+          </>
+
+          <>
+            <Divider type="vertical" />
+            <a
+              onClick={() => {
+                entityApiService.deleteEntity(record._id).then((res) => {
+                  if (res.code === 200) {
+                    message.info('删除成功');
+                    loadData();
+                  }
+                });
+              }}
+            >
+              <Typography.Text type="danger">删除</Typography.Text>
+            </a>
+          </>
+        </>
+      ),
     },
   ];
 
+  useEffect(() => {
+    loadData();
+  }, []);
+
   return (
     <PageContainer title={false}>
-      <ProTable<NewsItem>
-        headerTitle="新闻列表"
+      <ProTable<Entity>
+        headerTitle={`${entityTypeName}`}
         actionRef={actionRef}
-        rowKey="key"
+        rowKey="_id"
         search={{
-          labelWidth: 120,
+          labelWidth: 'auto',
         }}
+        loading={loading}
         columns={columns}
-        request={(params) => queryNews({ ...params })}
+        dataSource={dataSource}
+        toolBarRender={() => [
+          <Button
+            key="button"
+            icon={<PlusOutlined />}
+            type="primary"
+            onClick={() => setCreactModalVisible(true)}
+          >
+            新建
+          </Button>,
+        ]}
       />
-
-      <Drawer
-        width={1000}
-        visible={!!row}
-        onClose={() => {
-          setRow(undefined);
-        }}
-        closable={false}
+      <ModalForm
+        modalTitle={`查看${entityTypeName}详情`}
+        modalVisible={detailModalVisible}
+        onCancel={() => setDetailModalVisible(false)}
+        modalWidth={640}
       >
-        {row?.title && (
-          <Typography>
-            <Title level={4}>{row.title}</Title>
-            <Paragraph>{row.content}</Paragraph>
-          </Typography>
+        <Details data={detailEntity} />
+      </ModalForm>
+
+      <ModalForm
+        modalWidth={840}
+        modalVisible={creactModalVisible}
+        onCancel={() => setCreactModalVisible(false)}
+        modalTitle={`新建${entityTypeName}`}
+      >
+        <CreateForm
+          onSubmitted={() => {
+            setCreactModalVisible(false);
+            loadData();
+          }}
+        />
+      </ModalForm>
+      <ModalForm
+        modalWidth={840}
+        modalVisible={modifyModalVisible}
+        onCancel={() => setModifyModalVisible(false)}
+        modalTitle={`编辑${entityTypeName}`}
+      >
+        {modifyEntity && (
+          <ModifyForm
+            onSubmitted={() => {
+              setModifyModalVisible(false);
+              loadData();
+            }}
+            bizId={modifyEntity?._id!}
+          />
         )}
-      </Drawer>
+      </ModalForm>
     </PageContainer>
   );
 };

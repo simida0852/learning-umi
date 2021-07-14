@@ -1,24 +1,42 @@
-import React from 'react';
-import { Modal } from 'antd';
+import React, { useState } from 'react';
+import { News_Create } from '@/models/news';
+import { Form, message } from 'antd';
+import { createNews } from '../service';
+import FormComp from './FormComp';
 
-interface CreateFormProps {
-  modalVisible: boolean;
-  onCancel: () => void;
+export interface EntityFormProps {
+  onSubmitted: () => void;
 }
 
-const CreateForm: React.FC<CreateFormProps> = (props) => {
-  const { modalVisible, onCancel } = props;
+const ReactFormComponent = FormComp;
+
+type EntitySubmitType = News_Create;
+const entityApiService = {
+  createEntity: createNews,
+};
+
+const CreateForm: React.FC<EntityFormProps> = (props) => {
+  const [form] = Form.useForm();
+
+  const [loading, setLoading] = useState(false);
 
   return (
-    <Modal
-      destroyOnClose
-      title="新建规则"
-      visible={modalVisible}
-      onCancel={() => onCancel()}
-      footer={null}
-    >
-      {props.children}
-    </Modal>
+    <ReactFormComponent
+      bizDataLoading={loading}
+      form={form}
+      onFinish={(values) => {
+        console.log('values: ', values);
+        const submitData = { ...values } as EntitySubmitType;
+        setLoading(true);
+        entityApiService.createEntity(submitData).then((res) => {
+          if (res.code === 200) {
+            message.info('添加成功');
+            setLoading(false);
+            props.onSubmitted();
+          }
+        });
+      }}
+    />
   );
 };
 
