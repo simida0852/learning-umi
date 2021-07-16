@@ -1,16 +1,18 @@
 /* eslint-disable no-empty-pattern */
-import { DefaultFooter, MenuDataItem, getMenuData, getPageTitle } from '@ant-design/pro-layout';
+
+import type { MenuDataItem } from '@ant-design/pro-layout';
+import { getMenuData, getPageTitle } from '@ant-design/pro-layout';
 import { Helmet, HelmetProvider } from 'react-helmet-async';
-import { Link, SelectLang, useIntl, ConnectProps, connect } from 'umi';
+import type { ConnectProps } from 'umi';
+import { Link, SelectLang, useIntl, connect } from 'umi';
 import React from 'react';
-import { ConnectState } from '@/models/connect';
+import type { ConnectState } from '@/models/connect';
 import styles from './UserLayout.less';
 import logo from '../assets/logo.svg';
+import { defaultFooterDom } from './BasicLayout';
 
 export interface UserLayoutProps extends Partial<ConnectProps> {
-  breadcrumbNameMap: {
-    [path: string]: MenuDataItem;
-  };
+  breadcrumbNameMap: Record<string, MenuDataItem>;
 }
 
 const UserLayout: React.FC<UserLayoutProps> = (props) => {
@@ -49,14 +51,14 @@ const UserLayout: React.FC<UserLayoutProps> = (props) => {
             <div className={styles.header}>
               <Link to="/">
                 <img alt="logo" className={styles.logo} src={logo} />
-                <span className={styles.title}>Ant Design</span>
+                <span className={styles.title}>桑里</span>
               </Link>
             </div>
-            <div className={styles.desc}>Ant Design 是西湖区最具影响力的 Web 设计规范</div>
+            <div className={styles.desc}>桑里管理系统</div>
           </div>
           {children}
         </div>
-        <DefaultFooter />
+        {defaultFooterDom}
       </div>
     </HelmetProvider>
   );

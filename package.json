@@ -53,7 +53,7 @@
     "@antv/l7-react": "^2.2.39",
     "@umijs/route-utils": "^1.0.32",
     "ahooks": "^2.10.8",
-    "antd": "^4.6.3",
+    "antd": "4.16.7",
     "classnames": "^2.2.6",
     "lodash": "^4.17.11",
     "moment": "^2.25.3",

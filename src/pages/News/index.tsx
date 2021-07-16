@@ -58,7 +58,7 @@ const TableList: React.FC<{}> = () => {
         <>
           <a
             onClick={() => {
-              entityApiService.queryEntitie(record._id).then((res) => {
+              entityApiService.queryEntitie(record?._id).then((res) => {
                 if (res.code === 200) {
                   setDetailModalVisible(true);
                   setDetailEntity(res.data);
@@ -85,7 +85,7 @@ const TableList: React.FC<{}> = () => {
             <Divider type="vertical" />
             <a
               onClick={() => {
-                entityApiService.deleteEntity(record._id).then((res) => {
+                entityApiService.deleteEntity(record?._id).then((res) => {
                   if (res.code === 200) {
                     message.info('删除成功');
                     loadData();
