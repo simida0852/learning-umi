@@ -1,5 +1,5 @@
 import request from '@/utils/request';
-import { RoleParams, RoleItem } from './data.d';
+import { RoleParams, RoleItem } from './data';
 
 export async function queryRoles(params?: RoleParams) {
   return request('/api/v1/role', {

@@ -7,8 +7,8 @@ import { PlusOutlined } from '@ant-design/icons';
 import DrawerCom from '@/components/Drawer';
 import { RoleItem } from './data';
 import { queryRole, queryRoles } from './service';
-import { UpdateUserForm } from '../UserTableList/components/UpdateUserForm';
-import { addUser, UpdateUser } from '../UserTableList/service';
+import { UpdateUserForm } from '../UserList/components/UpdateUserForm';
+import { addUser, UpdateUser } from '../UserList/service';
 
 const TableList: React.FC<{}> = () => {
   const actionRef = useRef<ActionType>();
